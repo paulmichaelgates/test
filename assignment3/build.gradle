@@ -1,0 +1,109 @@
+// set as java application
+apply plugin: 'application'
+
+//define main class
+mainClassName = 'Concentration'
+
+def host = "localhost"
+def port = "8080"
+
+repositories {
+    mavenCentral()
+}
+
+dependencies{
+  implementation 'org.json:json:20171018' // org.json
+}
+
+//gradle runClientTCP -Pport=9099 -Phost='localhost'
+task runClientTCP(type: JavaExec) {
+
+  classpath = sourceSets.main.runtimeClasspath
+  main = 'client/_driver'
+  standardInput = System.in
+
+  // check to see if the port is set
+  if (project.hasProperty("port"))
+  {
+    port = project.getProperty("port")
+  }
+
+  // check to see if host is set
+  if (project.hasProperty("host"))
+  {
+    host = project.getProperty("host")
+  }
+
+  // default configuration for the client
+  args "-tcp", host, port
+}
+
+// TODO PMG make this work
+//gradle runClientUDP -Pport=9099 -Phost='localhost'
+task runClientUDP(type: JavaExec) {
+
+  classpath = sourceSets.main.runtimeClasspath
+  main = 'client/_driver'
+  standardInput = System.in
+
+  // check to see if the port is set
+  if (project.hasProperty("port"))
+  {
+    port = project.getProperty("port")
+  }
+
+  // check to see if the host is set
+  if (project.hasProperty("host"))
+  {
+    host = project.getProperty("host")
+  }
+  
+  // set args
+  args "-udp", host, port
+
+}
+
+sourceSets {
+    main {
+        resources {
+            srcDirs "src/main/java/server/game/img/"
+        }
+    }
+}
+
+//gradle runServerTCP -Pport=XYZ [deafult port 8080]
+task runServerTCP(type: JavaExec) {
+
+  classpath = sourceSets.main.runtimeClasspath
+  main = 'server/_driver'
+  standardInput = System.in
+
+// check to see if the port is set
+  if (project.hasProperty("port"))
+  {
+    port = project.getProperty("port")
+  }
+
+  // default configuration for the client
+  args "-tcp", port 
+
+}
+
+//gradle runServerUDP -Pport=XYZ [deafult port 8080] 
+task runServerUDP(type: JavaExec) {
+
+  classpath = sourceSets.main.runtimeClasspath
+  main = 'server/_driver'
+  standardInput = System.in
+
+  // check to see if the port is set
+  if ( project.hasProperty("port") )
+  {
+    port = project.getProperty("port")
+  }
+
+  // default configuration for the client
+  args "-udp", port
+}
+
+
